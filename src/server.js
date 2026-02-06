@@ -28,7 +28,7 @@ const startServer = async () => {
             console.warn('⚠️  Server starting without Redis - caching will be unavailable');
         }
 
-        const server = app.listen(PORT, () => {
+        const server = app.listen(PORT, '0.0.0.0', () => {
             console.log(`\n🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
             logger.info(`Server started on port ${PORT}`);
 

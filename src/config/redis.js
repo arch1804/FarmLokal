@@ -9,6 +9,8 @@ const connectRedis = async () => {
             socket: {
                 host: process.env.REDIS_HOST || 'localhost',
                 port: process.env.REDIS_PORT || 6379,
+                reconnectStrategy: false, // Disable automatic reconnection
+                connectTimeout: 5000, // 5 second timeout
             },
             password: process.env.REDIS_PASSWORD || undefined,
         });
