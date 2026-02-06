@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # Node.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: farmlokal-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/farmlokal
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRE=7d
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GITHUB_CALLBACK_URL=${GITHUB_CALLBACK_URL}
+      - FRONTEND_URL=${FRONTEND_URL}
+      - EXTERNAL_API_URL=https://fakestoreapi.com
+      - LOG_LEVEL=info
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - farmlokal-network
+    volumes:
+      - ./logs:/app/logs
+
+  # MongoDB
+  mongo:
+    image: mongo:7
+    container_name: farmlokal-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=farmlokal
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - farmlokal-network
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: farmlokal-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - farmlokal-network
+    command: redis-server --appendonly yes
+
+networks:
+  farmlokal-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+  redis-data:
