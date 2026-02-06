@@ -1,4 +1,4 @@
-<img width="1465" height="575" alt="image" src="https://github.com/user-attachments/assets/c74cf18b-f12b-4eea-9351-6d720504284c" /><img width="1465" height="575" alt="image" src="https://github.com/user-attachments/assets/c74cf18b-f12b-4eea-9351-6d720504284c" /># FarmLokal Backend API
+# FarmLokal Backend API
 
 A scalable and production-ready RESTful API backend for FarmLokal, built with Node.js, Express, and MongoDB. This backend provides comprehensive product management, OAuth authentication, external API integration with resilience patterns, and advanced caching mechanisms.
 ## RENDER LINK
