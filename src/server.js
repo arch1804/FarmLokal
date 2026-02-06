@@ -15,12 +15,29 @@ process.on('uncaughtException', (err) => {
 
 const startServer = async () => {
     try {
-        await connectDB();
-        await connectRedis();
+        const dbConnection = await connectDB();
+        const redisConnection = await connectRedis();
+
+        if (!dbConnection) {
+            logger.warn('Starting server without MongoDB connection');
+            console.warn('⚠️  Server starting without MongoDB - some features will be unavailable');
+        }
+
+        if (!redisConnection) {
+            logger.warn('Starting server without Redis connection');
+            console.warn('⚠️  Server starting without Redis - caching will be unavailable');
+        }
 
         const server = app.listen(PORT, () => {
             console.log(`\n🚀 Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
             logger.info(`Server started on port ${PORT}`);
+
+            if (!dbConnection || !redisConnection) {
+                console.log('\n⚠️  WARNING: Server started with missing services:');
+                if (!dbConnection) console.log('   - MongoDB: Not connected');
+                if (!redisConnection) console.log('   - Redis: Not connected');
+                console.log('   Please configure environment variables and restart.\n');
+            }
         });
 
         process.on('unhandledRejection', (err) => {

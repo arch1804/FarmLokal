@@ -30,10 +30,21 @@ const { specs, swaggerUi } = require('./config/swagger');
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.get('/health', (req, res) => {
+    const mongoose = require('mongoose');
+    const { getRedisClient } = require('./config/redis');
+
+    const mongoStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+    const redisClient = getRedisClient();
+    const redisStatus = redisClient && redisClient.isReady ? 'connected' : 'disconnected';
+
     res.status(200).json({
         success: true,
         message: 'Server is running',
         timestamp: new Date().toISOString(),
+        services: {
+            mongodb: mongoStatus,
+            redis: redisStatus
+        }
     });
 });
 

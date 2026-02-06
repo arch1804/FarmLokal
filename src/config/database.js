@@ -28,7 +28,9 @@ const connectDB = async () => {
     } catch (error) {
         logger.error(`Error connecting to MongoDB: ${error.message}`);
         console.error(`Error: ${error.message}`);
-        process.exit(1);
+        logger.warn('Server will start without MongoDB connection. Please configure MONGODB_URI environment variable.');
+        console.warn('⚠️  WARNING: MongoDB connection failed. Server starting without database.');
+        return null;
     }
 };
 
